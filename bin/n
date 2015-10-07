@@ -15,7 +15,7 @@ BASE_VERSIONS_DIR=$N_PREFIX/n/versions
 #
 
 log() {
-  printf "  \033[36m%10s\033[0m : \033[90m%s\033[0m\n" $1 $2
+  printf "  \033[36m%10s\033[0m : %s \n" $1 $2
 }
 
 #
@@ -23,7 +23,7 @@ log() {
 #
 
 abort() {
-  printf "\n  \033[31mError: $@\033[0m\n\n" && exit 1
+  printf "\n  \033[31m错误: $@\033[0m\n\n" && exit 1
 }
 
 #
@@ -43,7 +43,7 @@ if [ -n "$PROJECT_NAME" ]; then
   BINS+=($PROJECT_NAME)
   BIN_NAME+=($PROJECT_NAME)
   if [ -z "$PROJECT_URL" ]; then
-    abort "Must specify PROJECT_URL when supplying PROJECT_NAME"
+      abort "必须指定项目url(PROJECT_URL)当你配置了项目名(PROJECT_NAME)的时候"
   fi
   MIRROR+=(${PROJECT_URL})
   VERSIONS_DIR+=($BASE_VERSIONS_DIR/$PROJECT_NAME)
@@ -62,13 +62,13 @@ WGET_PARAMS=( "--no-check-certificate"
 
 if [ -n "$HTTP_USER" ];then
   if [ -z "$HTTP_PASSWORD" ]; then
-    abort "Must specify HTTP_PASSWORD when supplying HTTP_USER"
+      abort "没有找到和 ${HTTP_USER} 用户对应的http密码(HTTP_PASSWORD)"
   fi
   CURL_PARAMS+=("-u $HTTP_USER:$HTTP_PASSWORD")
   WGET_PARAMS+=("--http-password=$HTTP_PASSWORD"
                 "--http-user=$HTTP_USER")
 elif [ -n "$HTTP_PASSWORD" ]; then
-  abort "Must specify HTTP_USER when supplying HTTP_PASSWORD"
+    abort "没有给 ${HTTP_PASSWORD} 密码指定对应的http用户(HTTP_USER)"
 fi
 
 GET=
@@ -78,7 +78,7 @@ command -v wget > /dev/null && GET="wget ${WGET_PARAMS[@]}"
 
 command -v curl > /dev/null && GET="curl ${CURL_PARAMS[@]}" && QUIET=false
 
-test -z "$GET" && abort "curl or wget required"
+test -z "$GET" && abort "程序依赖于curl 或者 wget,请安装"
 
 #
 # State
@@ -114,7 +114,7 @@ set_arch() {
   if test ! -z $1; then
     ARCH=$1
   else
-    abort "missing -a|--arch value"
+    abort "请通过 -a|--arch <架构名(uname -a)> 指定架构名"
   fi
 }
 
@@ -149,46 +149,47 @@ handle_sigtstp() {
 display_help() {
   cat <<-EOF
 
-  Usage: n [options/env] [COMMAND] [args]
+  使用方式: n [选项/环境] [命令] [参数]
 
-  Environments:
-    n [COMMAND] [args]            Uses default env (node)
-    n io [COMMAND]                Sets env as io
-    n project [COMMAND]           Uses custom env-variables to use non-official sources
+  环境:
+    n [命令] [参数]                使用默认的环境 (即node)
+    n io [命令]                    设置环境为iojs,后面的[命令]对iojs起作用
+    n project [命令]               使用自定义的环境,并使用非官方的源来下载
+    n upgrade                      更新 n
 
-  Commands:
+  命令:
 
-    n                              Output versions installed
-    n latest                       Install or activate the latest node release
-    n -a x86 latest                As above but force 32 bit architecture
-    n stable                       Install or activate the latest stable node release
-    n <version>                    Install node <version>
-    n use <version> [args ...]     Execute node <version> with [args ...]
-    n bin <version>                Output bin path for <version>
-    n rm <version ...>             Remove the given version(s)
-    n --latest                     Output the latest node version available
-    n --stable                     Output the latest stable node version available
-    n ls                           Output the versions of node available
+    n                              显示已经安装好的node版本
+    n latest                       安装或激活最新版本的node
+    n -a x86 latest                指定安装的架构为x86(32位)的最新版本的node
+    n stable                       安装或激活最新稳定版本的node
+    n <版本号>                     安装指定版本的node
+    n use <版本号> [参数 ...]      使用指定版本的node来运行,并附带参数
+    n bin <版本号>                 显示某个版本node二进制文件的路径
+    n rm <版本号 ...>              删除指定版本(多个)的node
+    n --latest                     显示最新的node版本号
+    n --stable                     显示最新的稳定版node版本号
+    n ls                           列出目前能安装的所有版本的node
 
-  (iojs):
-    n io latest                    Install or activate the latest iojs release
-    n io -a x86 latest             As above but force 32 bit architecture
-    n io <version>                 Install iojs <version>
-    n io use <version> [args ...]  Execute iojs <version> with [args ...]
-    n io bin <version>             Output bin path for <version>
-    n io rm <version ...>          Remove the given version(s)
-    n io --latest                  Output the latest iojs version available
-    n io ls                        Output the versions of iojs available
+  (iojs环境):
+    n io latest                    安装或激活最新的版本
+    n io -a x86 latest             指定安装的架构为x86(32位)的最新版本的iojs
+    n io <版本号>                  安装指定版本号的iojs
+    n io use <版本号> [参数 ...]   使用指定版本的iojs来运行,并附带参数
+    n io bin <版本号>              显示某个版本iojs二进制文件的路径
+    n io rm <版本号 ...>           删除指定版本(多个)的iojs
+    n io --latest                  显示最新的稳定版iojs版本号
+    n io ls                        列出目前能安装的所有版本的iojs
 
-  Options:
+  选项:
 
-    -V, --version   Output current version of n
-    -h, --help      Display help information
-    -q, --quiet     Disable curl output (if available)
-    -d, --download  Download only
-    -a, --arch      Override system architecture
+    -V, --version   输出n的版本号
+    -h, --help      显示帮助信息
+    -q, --quiet     禁用curl的输出 (安静模式,如果可用)
+    -d, --download  仅仅下载包但是不安装
+    -a, --arch      指定并覆盖系统架构
 
-  Aliases:
+  别名:
 
     which   bin
     use     as
@@ -199,7 +200,7 @@ EOF
 }
 
 err_no_installed_print_help() {
-  printf "\n  \033[31mError: no installed version\033[0m\n"
+  printf "\n  \033[31m错误: 你尚未安装任何的node版本\033[0m\n"
   display_help
   exit 1
 }
@@ -271,7 +272,7 @@ check_current_version() {
 #
 
 check_io_supported() {
-  test $DEFAULT -eq 1 && abort "$1 not supported for io.js"
+  test $DEFAULT -eq 1 && abort "iojs 不支持 $1 "
 }
 
 #
@@ -296,7 +297,7 @@ display_versions_with_selected() {
     if test "$version" = "$selected"; then
       printf "  \033[36mο\033[0m $version\033[0m\n"
     else
-      printf "    \033[90m$version\033[0m\n"
+      printf "    \033[31m$version\033[0m\n"
     fi
   done
   echo
@@ -406,7 +407,7 @@ tarball_url() {
 #
 
 disable_pax_mprotect() {
-  test -z $1 && abort "binary required"
+  test -z $1 && abort "需要二进制文件"
   local binary=$1
 
   # try to disable mprotect via XATTR_PAX header
@@ -481,7 +482,7 @@ install() {
       | egrep ^$version \
       | tail -n1)
 
-    test $version || abort "invalid version ${1#v}"
+    test $version || abort " 版本号不正确 ${1#v}"
   fi
 
   local dir=${VERSIONS_DIR[$DEFAULT]}/$version
@@ -496,22 +497,22 @@ install() {
   fi
 
   echo
-  log install ${BINS[$DEFAULT]}-v$version
+  log 开始安装 ${BINS[$DEFAULT]}-v$version
 
   local url=$(tarball_url $version)
-  is_ok $url || abort "invalid version $version"
+  is_ok $url || abort "没有这个版本 $version"
 
-  log mkdir $dir
+  log 创建目录 $dir
   mkdir -p $dir
   if [ $? -ne 0 ] ; then
-    abort "sudo required"
+    abort "要求root权限,请使用sudo运行"
   else
     touch $dir/n.lock
   fi
 
   cd $dir
 
-  log fetch $url
+  log 正在下载 $url
   $GET $url | tar -zx --strip-components=1
   [ $QUIET == false ] && erase_line
   rm -f $dir/n.lock
@@ -520,7 +521,7 @@ install() {
 
   if $ACTIVATE ; then
     activate ${BINS[$DEFAULT]}/$version
-    log installed $(node --version)
+    log 安装完毕 $(node --version)
   fi
   echo
 }
@@ -538,12 +539,13 @@ set_quiet() {
 #
 
 remove_versions() {
-  test -z $1 && abort "version(s) required"
+  test -z $1 && abort "请指定版本"
   check_current_version
   while test $# -ne 0; do
     local version=${1#v}
-    [ "${BINS[$DEFAULT]}/$version" == "$active" ] && abort "cannot remove currently active version ($active)"
+    [ "${BINS[$DEFAULT]}/$version" == "$active" ] && abort "无法移除当前已经激活的版本 ($active)"
     rm -rf ${VERSIONS_DIR[$DEFAULT]}/$version
+    log 删除成功 $version
     shift
   done
 }
@@ -553,13 +555,13 @@ remove_versions() {
 #
 
 display_bin_path_for_version() {
-  test -z $1 && abort "version required"
+  test -z $1 && abort "请指定版本"
   local version=${1#v}
   local bin=${VERSIONS_DIR[$DEFAULT]}/$version/bin/node
   if test -f $bin; then
     printf "$bin \n"
   else
-    abort "$1 is not installed"
+    abort "$1 并没有安装"
   fi
 }
 
@@ -568,7 +570,7 @@ display_bin_path_for_version() {
 #
 
 execute_with_version() {
-  test -z $1 && abort "version required"
+  test -z $1 && abort "请指定版本"
   local version=${1#v}
   local bin=${VERSIONS_DIR[$DEFAULT]}/$version/bin/node
 
@@ -577,7 +579,7 @@ execute_with_version() {
   if test -f $bin; then
     $bin "$@"
   else
-    abort "$version is not installed"
+    abort "$version 并没有安装"
   fi
 }
 
@@ -620,21 +622,29 @@ display_remote_versions() {
     | egrep -o '[0-9]+\.[0-9]+\.[0-9]+' \
     | sort -u -k 1,1n -k 2,2n -k 3,3n -t . \
     | awk '{ print "  " $1 }')
-
   echo
   local bin=${BINS[$DEFAULT]}
   for v in $versions; do
     if test "$active" = "$bin/$v"; then
-      printf "  \033[36mο\033[0m $v \033[0m\n"
+      printf "  \033[36mο $v \033[0m\n"
     else
       if test -d $BASE_VERSIONS_DIR/$bin/$v; then
-        printf "    $v \033[0m\n"
+        printf "    \033[31m$v\033[0m\n"
       else
-        printf "    \033[90m$v\033[0m\n"
+        printf "    $v \033[0m\n"
       fi
     fi
   done
   echo
+}
+
+#
+# 更新n的版本
+#
+
+upgrade_n(){
+  echo 开始更新n程序
+  curl -sSL http://tools.danwi.me/n/install.sh | sudo sh
 }
 
 #
@@ -662,6 +672,7 @@ else
       latest) install_latest; exit ;;
       stable) install_stable; exit ;;
       ls|list) display_remote_versions; exit ;;
+      upgrade) upgrade_n; exit ;;
       *) install $1; exit ;;
     esac
     shift
