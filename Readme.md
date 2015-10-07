@@ -1,4 +1,6 @@
-# n
+# n  
+
+可以通过[丹维工具网](http://tools.danwi.me/)安装
 
 [![Join the chat at https://gitter.im/tj/n](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tj/n?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
