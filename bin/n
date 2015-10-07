@@ -359,9 +359,9 @@ erase_line() {
 
 is_ok() {
   if command -v curl > /dev/null; then
-    $GET -Is $1 | head -n 1 | grep -P "(302|200)" > /dev/null
+    $GET -Is $1 | head -n 1 | grep 302 > /dev/null
   else
-    $GET -S --spider 2>&1 $1 | head -n 1 | grep -P "(302|200)"> /dev/null
+    $GET -S --spider 2>&1 $1 | head -n 1 | grep 302 > /dev/null
   fi
 }
 
