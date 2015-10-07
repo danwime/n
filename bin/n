@@ -32,8 +32,8 @@ abort() {
 
 BINS=("node"
       "io")
-MIRROR=(${NODE_MIRROR-https://nodejs.org/dist/}
-        ${IO_MIRROR-https://iojs.org/dist/})
+MIRROR=(${NODE_MIRROR-http://npm.taobao.org/mirrors/node/}
+        ${IO_MIRROR-http://npm.taobao.org/mirrors/iojs/})
 BIN_NAME=("node"
           "iojs")
 VERSIONS_DIR=($BASE_VERSIONS_DIR/node
