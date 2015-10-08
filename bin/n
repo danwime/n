@@ -196,6 +196,10 @@ display_help() {
     list    ls
     -       rm
 
+  其他:
+
+    该工具附带一个npm的外壳命令dpm,使用的是淘宝的仓库,使用方法如npm: dpm install
+
 EOF
 }
 
@@ -662,8 +666,10 @@ upgrade_n(){
   sudo mkdir -p /usr/local/bin
   echo "删除原来的旧版本(如果有)"
   sudo rm -f /usr/local/bin/n
+  sudo rm -f /usr/local/bin/dpm
   echo "安装新版本"
   sudo cp -f ./bin/n /usr/local/bin/n
+  sudo cp -f ./bin/dpm /usr/local/bin/dpm
 
   rm -rf $TMP
   echo "安装完成,删除临时目录"
