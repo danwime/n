@@ -4,7 +4,7 @@ TMP=/tmp/n_install
 GIT_URL=https://git.danwi.me/danwi/n.git
 
 mkdir -p $TMP
-echo "创建临时目录${TMP}"
+echo "创建临时目录 ${TMP}"
 
 cd $TMP
 
@@ -12,8 +12,17 @@ echo "开始克隆项目: ${GIT_URL}"
 git clone $GIT_URL
 
 echo "开始安装"
-cd n
-make install
+cd ./n
+echo "确认目录存在: /usr/local/bin"
+sudo mkdir -p /usr/local/bin
 
-rm -rf /tmp/n_install
+echo "删除原来的旧版本(如果有)"
+sudo rm -f /usr/local/bin/n
+sudo rm -f /usr/local/bin/dpm
+
+echo "安装新版本"
+sudo cp -f ./bin/n /usr/local/bin/n
+sudo cp -f ./bin/dpm /usr/local/bin/dpm
+
+rm -rf $TMP
 echo "安装完成,删除临时目录"
