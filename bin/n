@@ -149,13 +149,18 @@ handle_sigtstp() {
 display_help() {
   cat <<-EOF
 
+  n nodejs版本管理工具
+
+  - 基于(https://github.com/tj/n.git)danwi重制版本,汉化并使用了taobao的源,速度快快哒...
+  - 添加了dpm命令,使用方法和npm一样,使用taobao的源,速度同样快快哒...
+
   使用方式: n [选项/环境] [命令] [参数]
 
   环境:
     n [命令] [参数]                使用默认的环境 (即node)
     n io [命令]                    设置环境为iojs,后面的[命令]对iojs起作用
     n project [命令]               使用自定义的环境,并使用非官方的源来下载
-    n upgrade                      更新 n
+    n upgrade                      从danwi服务器上下载最新的n并更新
 
   命令:
 
