@@ -644,7 +644,24 @@ display_remote_versions() {
 
 upgrade_n(){
   echo 开始更新n程序
-  curl -sSL http://tools.danwi.me/n/install.sh | sudo sh
+  
+  TMP=/tmp/n_install
+  GIT_URL=https://tools.danwi.me/n/install.sh
+
+  mkdir -p $TMP
+  echo "创建临时目录 ${TMP}"
+  
+  cd $TMP
+
+  echo "开始克隆项目: ${GIT_URL}"
+  git clone $GIT_URL
+
+  echo "开始安装"
+  cd n
+  sudo make install
+
+  rm -rf $TMP
+  echo "安装完成,删除临时目录"
 }
 
 #
