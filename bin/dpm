@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
 
-echo "使用taobao的仓库:http://registry.npm.taobao.org"
 npm $@ \
 --registry=http://registry.npm.taobao.org
