@@ -646,7 +646,7 @@ upgrade_n(){
   echo 开始更新n程序
   
   TMP=/tmp/n_install
-  GIT_URL=https://tools.danwi.me/n/install.sh
+  GIT_URL=https://git.danwi.me/danwi/n.git
 
   mkdir -p $TMP
   echo "创建临时目录 ${TMP}"
@@ -657,8 +657,9 @@ upgrade_n(){
   git clone $GIT_URL
 
   echo "开始安装"
-  cd n
-  sudo make install
+  cd ./n
+  sudo mkdir -p /usr/local/bin
+  sudo cp -f ./bin/n /usr/local/bin/n
 
   rm -rf $TMP
   echo "安装完成,删除临时目录"
