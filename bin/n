@@ -658,7 +658,11 @@ upgrade_n(){
 
   echo "开始安装"
   cd ./n
+  echo "确认目录存在: /usr/local/bin"
   sudo mkdir -p /usr/local/bin
+  echo "删除原来的旧版本(如果有)"
+  sudo rm -f /usr/local/bin/n
+  echo "安装新版本"
   sudo cp -f ./bin/n /usr/local/bin/n
 
   rm -rf $TMP
