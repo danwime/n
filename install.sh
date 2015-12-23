@@ -24,5 +24,9 @@ echo "安装新版本"
 sudo cp -f ./bin/n /usr/local/bin/n
 sudo cp -f ./bin/dpm /usr/local/bin/dpm
 
+echo "设定环境变量"
+sudo echo "export NODE_PATH=/usr/local/lib/node_modules" > /etc/profile.d/node_path.sh
+source /etc/profile.d/node_path.sh
+
 rm -rf $TMP
 echo "安装完成,删除临时目录"
