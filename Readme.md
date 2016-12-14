@@ -1,7 +1,7 @@
 # n  
 
-可以通过[丹维工具网](http://tools.danwi.me/)安装
-
+可以通过[丹维工具网](http://tools.danwi.me/)安装  
+方便地实现node版本管理,急速下载,汉化...  感动到哭😭...  
 [![Join the chat at https://gitter.im/tj/n](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tj/n?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Simple flavour of node/iojs binary management, no subshells, no profile setup, no convoluted api, just _simple_.
